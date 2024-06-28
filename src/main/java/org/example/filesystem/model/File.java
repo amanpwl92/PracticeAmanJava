@@ -20,6 +20,7 @@ public class File {
     this.content = content;
     this.folderId = folderId;
     this.id = UUID.randomUUID();
+    this.size = content.length;
   }
 
   public UUID getId() {

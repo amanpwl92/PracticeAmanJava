@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public class FileSystemUtils {
 
-  public static Folder getExistingFolder(FileSystem fileSystem, UUID folderId) throws InvalidFolderException {
+  public static Folder getOrValidateExistingFolder(FileSystem fileSystem, UUID folderId) throws InvalidFolderException {
     Folder folder = fileSystem.getFolders().get(folderId);
 
     if (folder == null) {
-      throw new RuntimeException("Folder not found");
+      throw new InvalidFolderException();
     }
 
     return folder;
