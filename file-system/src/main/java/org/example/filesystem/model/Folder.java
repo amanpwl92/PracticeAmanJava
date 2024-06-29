@@ -1,9 +1,6 @@
 package org.example.filesystem.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Folder {
   private UUID id;
@@ -19,8 +16,8 @@ public class Folder {
     this.id = UUID.randomUUID();
     this.name = name;
     this.parentFolderId = parentFolderId;
-    this.subFolders = new ArrayList<>();
-    this.files = new ArrayList<>();
+    this.subFolders = new LinkedList<>();
+    this.files = new LinkedList<>();
   }
 
   public UUID getId() {

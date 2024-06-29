@@ -1,5 +1,6 @@
 package org.example.filesystem.core;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,6 +12,11 @@ public class TestArrayListLinkedListPerformance {
 
   private static final int size = 10000000;
   private static final int inc = 10000;
+
+  @Before
+  public void initialize() {
+    System.out.println("Total memory available = " + Runtime.getRuntime().totalMemory()/(1024 * 1024));
+  }
 
   @Test
   public void testInsertAndDeleteArrayList() {
