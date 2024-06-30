@@ -41,7 +41,7 @@ public class SnakeGameTest {
   }
 
   @Test(expected = SnakeDeadException.class)
-  public void testSnakeDead() {
+  public void testSnakeDeadAfterMovementsAndDirectionChange() {
     snakeGame = new SnakeGame(Direction.RIGHT, 6, 10, 3, 2, 4);
 
     snakeGame.moveOneStep();
@@ -64,6 +64,20 @@ public class SnakeGameTest {
     snakeGame.setCurrentDirection(Direction.BOTTOM);
     snakeGame.moveOneStep(); // snake will die here
 
+  }
+
+  @Test(expected = SnakeDeadException.class)
+  public void testSnakeDeadWithoutDirectionChange() {
+    snakeGame = new SnakeGame(Direction.TOP, 6, 10, 3, 2, 4);
+
+    snakeGame.moveOneStep();
+    snakeGame.moveOneStep();
+    snakeGame.moveOneStep();
+    snakeGame.moveOneStep();
+    snakeGame.moveOneStep();
+    snakeGame.moveOneStep();
+    snakeGame.moveOneStep();
+    snakeGame.moveOneStep(); // snake will die here
   }
 
 }
