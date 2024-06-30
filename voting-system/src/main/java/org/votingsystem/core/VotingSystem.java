@@ -83,13 +83,4 @@ public class VotingSystem {
     });
   }
 
-//  public String[] topNCandidates(int n) {
-//
-//    return candidatesVotes;
-//
-//
-//
-//  }
-
-
 }
