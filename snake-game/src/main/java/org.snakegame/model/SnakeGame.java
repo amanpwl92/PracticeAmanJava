@@ -12,11 +12,11 @@ public class SnakeGame {
 
   private LinkedList<Coordinate> coordinates;
   private Direction currentDirection;
-  private int noOfRows;
-  private int noOfColumns;
-  private int initialSize;
-  private int growSize;
-  private int growAfterStep;
+  private final int noOfRows;
+  private final int noOfColumns;
+  private final int initialSize;
+  private final int growSize;
+  private final int growAfterStep;
 
   private int stepCount=0;
 
@@ -31,6 +31,11 @@ public class SnakeGame {
 
     coordinates = new LinkedList<>();
 
+    validateGame();
+    growInitialSnake();
+  }
+
+  private void validateGame() {
     if((currentDirection == Direction.LEFT || currentDirection == Direction.RIGHT) && (initialSize > noOfColumns)) {
       throw new InvalidGameStartException("Invalid Game");
     }
@@ -43,6 +48,9 @@ public class SnakeGame {
       throw new InvalidGameStartException("Invalid Game");
     }
 
+  }
+
+  private void growInitialSnake() {
     int startRow = noOfRows/2;
     int startColumn = noOfColumns/2;
     coordinates.addFirst(new Coordinate(startRow, startColumn));
@@ -53,7 +61,6 @@ public class SnakeGame {
       startRow = coordinate.getRow();
       startColumn = coordinate.getColumn();
     }
-
   }
 
   private Coordinate getMovementCoordinates(int startRow, int startColumn) {
@@ -105,17 +112,19 @@ public class SnakeGame {
       throw new SnakeDeadException("Game is over as snake's head has collided with its body");
     }
     coordinates.addFirst(newHead);
-
     coordinates.removeLast();
-
     stepCount++;
 
+    growSnake();
+  }
+
+  private void growSnake() {
     if(stepCount% growAfterStep == 0) {
 
       int growSizeTemp = growSize;
       while(growSizeTemp != 0) {
-        head = coordinates.getFirst();
-        newHead = getMovementCoordinates(head.getRow(), head.getColumn());
+        Coordinate head = coordinates.getFirst();
+        Coordinate newHead = getMovementCoordinates(head.getRow(), head.getColumn());
         if (coordinates.contains(newHead)) {
           throw new SnakeDeadException("Game is over as snake's head has collided with its body");
         }
@@ -124,61 +133,15 @@ public class SnakeGame {
       }
 
     }
+
   }
 
   public List<Coordinate> getCoordinates() {
     return coordinates;
   }
 
-  public void setCoordinates(LinkedList<Coordinate> coordinates) {
-    this.coordinates = coordinates;
-  }
-
-  public Direction getCurrentDirection() {
-    return currentDirection;
-  }
-
   public void setCurrentDirection(Direction currentDirection) {
     this.currentDirection = currentDirection;
   }
 
-  public int getNoOfRows() {
-    return noOfRows;
-  }
-
-  public void setNoOfRows(int noOfRows) {
-    this.noOfRows = noOfRows;
-  }
-
-  public int getNoOfColumns() {
-    return noOfColumns;
-  }
-
-  public void setNoOfColumns(int noOfColumns) {
-    this.noOfColumns = noOfColumns;
-  }
-
-  public int getInitialSize() {
-    return initialSize;
-  }
-
-  public void setInitialSize(int initialSize) {
-    this.initialSize = initialSize;
-  }
-
-  public int getGrowSize() {
-    return growSize;
-  }
-
-  public void setGrowSize(int growSize) {
-    this.growSize = growSize;
-  }
-
-  public int getGrowAfterStep() {
-    return growAfterStep;
-  }
-
-  public void setGrowAfterStep(int growAfterStep) {
-    this.growAfterStep = growAfterStep;
-  }
 }
