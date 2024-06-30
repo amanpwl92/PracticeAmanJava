@@ -40,7 +40,7 @@ public class SnakeGameTest {
     snakeGame = new SnakeGame(Direction.TOP, 6, 10, 7, 2, 4);
   }
 
-  @Test
+  @Test(expected = SnakeDeadException.class)
   public void testSnakeDead() {
     snakeGame = new SnakeGame(Direction.RIGHT, 6, 10, 3, 2, 4);
 
@@ -57,13 +57,12 @@ public class SnakeGameTest {
 
     snakeGame.setCurrentDirection(Direction.TOP);
     snakeGame.moveOneStep();
-    snakeGame.moveOneStep();
 
     snakeGame.setCurrentDirection(Direction.LEFT);
     snakeGame.moveOneStep();
 
-
-
+    snakeGame.setCurrentDirection(Direction.BOTTOM);
+    snakeGame.moveOneStep(); // snake will die here
 
   }
 

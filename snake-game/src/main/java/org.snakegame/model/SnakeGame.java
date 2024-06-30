@@ -114,7 +114,8 @@ public class SnakeGame {
 
       int growSizeTemp = growSize;
       while(growSizeTemp != 0) {
-        newHead = getMovementCoordinates(startRow, startColumn);
+        head = coordinates.getFirst();
+        newHead = getMovementCoordinates(head.getRow(), head.getColumn());
         if (coordinates.contains(newHead)) {
           throw new SnakeDeadException("Game is over as snake's head has collided with its body");
         }
