@@ -4,6 +4,7 @@ import org.ratelimiter.exceptions.LimitNotFoundException;
 import org.ratelimiter.exceptions.RateLimitException;
 import org.ratelimiter.model.Operation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,9 @@ public class RateLimiter {
 
     operationsCnt++;
     op.setEndTime(currentTime + op.getRuntime());
+    if (!consumerOperationsMap.containsKey(op.getConsumerId())) {
+      consumerOperationsMap.put(op.getConsumerId(), new ArrayList<>());
+    }
     consumerOperationsMap.get(op.getConsumerId()).add(op);
 
   }

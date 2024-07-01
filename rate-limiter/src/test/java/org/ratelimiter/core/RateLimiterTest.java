@@ -2,6 +2,7 @@ package org.ratelimiter.core;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.ratelimiter.exceptions.RateLimitException;
 import org.ratelimiter.model.Operation;
 
 import java.util.HashMap;
@@ -32,36 +33,49 @@ public class RateLimiterTest {
     assertNull(limiter.getConsumerOperationsMap().get("A"));
   }
 
-//  @Test
-//  public void testWithOperationsInHappyPath() {
-//    limiter.increaseTime();
-//    limiter.increaseTime();
-//    limiter.increaseTime();
-//    limiter.submitOperation(new Operation("A", 3));
-//    limiter.submitOperation(new Operation("C", 2));
-//    limiter.submitOperation(new Operation("B", 4));
-//    assertEquals(limiter.getCurrentTime(), 3);
-//    assertEquals(limiter.getOperationsCnt(), 0);
-//    assertNull(limiter.getConsumerOperationsMap().get("A"));
-//  }
-//
-//  @Test
-//  public void testWithConsumerLimitReaching() {
-//    limiter.increaseTime();
-//    limiter.increaseTime();
-//    limiter.increaseTime();
-//    assertEquals(limiter.getCurrentTime(), 3);
-//    assertEquals(limiter.getOperationsCnt(), 0);
-//    assertNull(limiter.getConsumerOperationsMap().get("A"));
-//  }
-//
-//  @Test
-//  public void testWithSystemLimitReaching() {
-//    limiter.increaseTime();
-//    limiter.increaseTime();
-//    limiter.increaseTime();
-//    assertEquals(limiter.getCurrentTime(), 3);
-//    assertEquals(limiter.getOperationsCnt(), 0);
-//    assertNull(limiter.getConsumerOperationsMap().get("A"));
-//  }
+  @Test
+  public void testWithOperationsInHappyPath() {
+    limiter.increaseTime();
+    limiter.increaseTime();
+    limiter.increaseTime();
+    limiter.submitOperation(new Operation("A", 3));
+    limiter.submitOperation(new Operation("C", 2));
+    limiter.submitOperation(new Operation("B", 4));
+    assertEquals(limiter.getCurrentTime(), 3);
+    assertEquals(limiter.getOperationsCnt(), 3);
+    limiter.increaseTime();
+    limiter.increaseTime();
+    limiter.increaseTime();
+    assertEquals(limiter.getCurrentTime(), 6);
+    assertEquals(limiter.getOperationsCnt(), 1);
+  }
+
+  @Test(expected = RateLimitException.class)
+  public void testWithSystemLimitReaching() {
+    limiter.submitOperation(new Operation("A", 3));
+    limiter.submitOperation(new Operation("B", 3));
+    limiter.submitOperation(new Operation("C", 3));
+    limiter.submitOperation(new Operation("A", 3));
+    limiter.submitOperation(new Operation("B", 3));
+    limiter.submitOperation(new Operation("C", 3));
+    limiter.submitOperation(new Operation("A", 3));
+    limiter.submitOperation(new Operation("B", 3));
+    limiter.submitOperation(new Operation("C", 3));
+    limiter.submitOperation(new Operation("C", 3));
+    limiter.submitOperation(new Operation("B", 3)); // system limit reaches here
+  }
+
+  @Test(expected = RateLimitException.class)
+  public void testWithConsumerLimitReaching() {
+    limiter.submitOperation(new Operation("A", 3));
+    limiter.submitOperation(new Operation("B", 3));
+    limiter.submitOperation(new Operation("C", 3));
+    limiter.submitOperation(new Operation("A", 3));
+    limiter.submitOperation(new Operation("B", 3));
+    limiter.submitOperation(new Operation("C", 3));
+    limiter.submitOperation(new Operation("A", 3));
+    limiter.submitOperation(new Operation("B", 3));
+    limiter.submitOperation(new Operation("C", 3));
+    limiter.submitOperation(new Operation("A", 3)); // consumer limit reahes here
+  }
 }
