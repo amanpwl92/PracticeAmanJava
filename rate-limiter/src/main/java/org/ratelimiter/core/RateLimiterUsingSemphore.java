@@ -7,19 +7,19 @@ import java.util.concurrent.TimeUnit;
 
 // X request per Y seconds for each user
 
-public class RateLimiterAdvanced {
+public class RateLimiterUsingSemphore {
   private final Semaphore semaphore;
   private final int maxLimit;
   private final int time;
   private final TimeUnit timeUnit;
 
-  public static RateLimiterAdvanced createCustomerRateLimiter(int limit, int time, TimeUnit timeUnit){
-    RateLimiterAdvanced rateLimiterAdvanced = new RateLimiterAdvanced(limit, time, timeUnit);
-    rateLimiterAdvanced.scheduleRelease();
-    return rateLimiterAdvanced;
+  public static RateLimiterUsingSemphore createCustomerRateLimiter(int limit, int time, TimeUnit timeUnit){
+    RateLimiterUsingSemphore rateLimiterUsingSemphore = new RateLimiterUsingSemphore(limit, time, timeUnit);
+    rateLimiterUsingSemphore.scheduleRelease();
+    return rateLimiterUsingSemphore;
   }
 
-  private RateLimiterAdvanced(int limit, int time, TimeUnit timeUnit){
+  private RateLimiterUsingSemphore(int limit, int time, TimeUnit timeUnit){
     this.semaphore = new Semaphore(limit);
     this.maxLimit = limit;
     this.time = time;
