@@ -11,8 +11,8 @@ public class RateLimitUsingQueueTest {
   // requests even in queue is full thus breaching the limit we have set. To test this, we also need to add some
   // sleep in isAllow method other wise things execute in sequence because we dont have much logic and hence thread
   // dont pause even for a nanosecond. Sleep here could be compared with time that could go to fetch consumer's rate
-  // limit & active requests count from a shared storage (eg redis). We are able to see rate limit inconsistency even
-  // with a sleep on 50 ms though will smaller sleep we might not see it always but still easily produceable
+  // limit & active requests count from a shared storage (eg redis). We are able to see rate limit thread safety issue
+  // even with a sleep on 50 ms though will smaller sleep we might not see it always but still easily produceable
 
 /*
 *
