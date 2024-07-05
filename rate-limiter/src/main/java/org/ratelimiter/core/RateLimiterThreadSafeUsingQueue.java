@@ -1,9 +1,9 @@
 package org.ratelimiter.core;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class RateLimiterThreadSafeUsingQueue {
@@ -35,7 +35,7 @@ public class RateLimiterThreadSafeUsingQueue {
   private final int REQUEST_LIMIT = 3;
   private final long TIME_LIMIT = 1000L;
 
-  private final Map<String, RateLimiterThreadSafeUsingQueue.HitCounter> clientHitMap = new ConcurrentHashMap<>();
+  private final Map<String, RateLimiterThreadSafeUsingQueue.HitCounter> clientHitMap = new HashMap<>();
 
   public boolean isAllow(String client_id, long curTime) {
 
@@ -49,7 +49,7 @@ public class RateLimiterThreadSafeUsingQueue {
 //    long curTime = System.currentTimeMillis();
 
     // computeIfAbsent-it will guarantee atomicity of getting entry from map and inserting in case key is missing.
-    // If we do get and then put in case of null using basic code, that wont' be atomic
+    // If we do get and then put (in case of null) using basic code, that wont' be atomic
     RateLimiterThreadSafeUsingQueue.HitCounter h = clientHitMap.computeIfAbsent(client_id, (key) -> new HitCounter());
     return h.hit(curTime);
   }
