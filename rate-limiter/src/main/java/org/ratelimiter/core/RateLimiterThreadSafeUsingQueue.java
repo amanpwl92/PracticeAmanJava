@@ -1,41 +1,41 @@
 package org.ratelimiter.core;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class RateLimiterThreadSafeUsingQueue {
 
   public class HitCounter {
-//    ConcurrentLinkedQueue<AtomicLong> q = null;
+    ReentrantLock lock;
     Queue<Long> q = null;
     public HitCounter() {
-//      q = new ConcurrentLinkedQueue<>();
+      lock = new ReentrantLock();
       q = new LinkedList<Long>();
     }
 
     public boolean hit(long timestamp) {
+      lock.lock();
       while(!q.isEmpty() && timestamp-q.peek() >= TIME_LIMIT) q.poll();
 
       if(q.size() < REQUEST_LIMIT)
       {
         q.offer(timestamp);
+        lock.unlock();
         return true;
       }
-
+      lock.unlock();
       return false;
+
     }
   }
 
   private final int REQUEST_LIMIT = 3;
   private final long TIME_LIMIT = 1000L;
 
-  private final Map<String, RateLimiterThreadSafeUsingQueue.HitCounter> clientHitMap = new HashMap<>();
-//  private final Map<String, RateLimiterThreadSafeUsingQueue.HitCounter> clientHitMap = new ConcurrentHashMap<>();
+  private final Map<String, RateLimiterThreadSafeUsingQueue.HitCounter> clientHitMap = new ConcurrentHashMap<>();
 
   public boolean isAllow(String client_id, long curTime) {
 
@@ -46,19 +46,11 @@ public class RateLimiterThreadSafeUsingQueue {
         System.out.println("exception came");
       }
     }
-
-
 //    long curTime = System.currentTimeMillis();
-    synchronized (this) {
-      RateLimiterThreadSafeUsingQueue.HitCounter h = clientHitMap.get(client_id);
-      if (h == null) {
-        h = new RateLimiterThreadSafeUsingQueue.HitCounter();
-        clientHitMap.put(client_id, h);
-      }
 
-      return h.hit(curTime);
-    }
-
-
+    // computeIfAbsent-it will guarantee atomicity of getting entry from map and inserting in case key is missing.
+    // If we do get and then put in case of null using basic code, that wont' be atomic
+    RateLimiterThreadSafeUsingQueue.HitCounter h = clientHitMap.computeIfAbsent(client_id, (key) -> new HitCounter());
+    return h.hit(curTime);
   }
 }
