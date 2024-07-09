@@ -4,10 +4,7 @@ import org.example.filesystem.model.File;
 import org.example.filesystem.model.Folder;
 import org.example.filesystem.utils.FileSystemUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FileSystem {
 
@@ -41,8 +38,6 @@ public class FileSystem {
     files = new HashMap<>();
     rootFolder = new Folder("Root", null);
     folders.put(rootFolder.getId(), rootFolder);
-    rootFolder.setFiles(new ArrayList<>());
-    rootFolder.setSubFolders(new ArrayList<>());
   }
 
   public File createFile(UUID folderId, String name, String extension, byte[] content) {

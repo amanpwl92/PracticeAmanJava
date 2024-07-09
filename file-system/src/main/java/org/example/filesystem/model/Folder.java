@@ -9,15 +9,15 @@ public class Folder {
   private Date createdDate;
   private Date lastModifiedDate;
   private UUID parentFolderId;
-  private List<Folder> subFolders;
-  private List<File> files;
+  private Set<Folder> subFolders;
+  private Set<File> files;
 
   public Folder(String name, UUID parentFolderId) {
     this.id = UUID.randomUUID();
     this.name = name;
     this.parentFolderId = parentFolderId;
-    this.subFolders = new LinkedList<>();
-    this.files = new LinkedList<>();
+    this.subFolders = new HashSet<>();
+    this.files = new HashSet<>();
   }
 
   public UUID getId() {
@@ -68,19 +68,32 @@ public class Folder {
     this.parentFolderId = parentFolderId;
   }
 
-  public List<Folder> getSubFolders() {
+  public Set<Folder> getSubFolders() {
     return subFolders;
   }
 
-  public void setSubFolders(List<Folder> subFolders) {
+  public void setSubFolders(Set<Folder> subFolders) {
     this.subFolders = subFolders;
   }
 
-  public List<File> getFiles() {
+  public Set<File> getFiles() {
     return files;
   }
 
-  public void setFiles(List<File> files) {
+  public void setFiles(Set<File> files) {
     this.files = files;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Folder folder = (Folder) o;
+    return id.equals(folder.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }
